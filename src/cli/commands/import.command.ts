@@ -1,41 +1,60 @@
 import { Command } from '../command.interface.js';
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+
 import chalk from 'chalk';
+import { TSVFileReader } from '../../shared/libs/file-reader/tsv-file-reader.js';
 
 export class ImportCommand implements Command {
+  private fileReader: TSVFileReader;
+  private processedCount = 0;
+
+  constructor() {
+    this.fileReader = new TSVFileReader();
+  }
+
+  private getErrorMessage(error: unknown): string {
+    return error instanceof Error ? error.message : 'Unknown error occurred';
+  }
+
+  private onImportedLine = async (line: string, resolve: () => void): Promise<void> => {
+    const offer = line.trim();
+
+    if (offer && !offer.startsWith('title\t')) {
+      this.processedCount++;
+
+      if (this.processedCount % 100 === 0) {
+        console.info(chalk.blue(`Processed ${this.processedCount} rows...`));
+      }
+    }
+
+    resolve();
+  };
+
+  private onCompleteImport = (): void => {
+    console.info(chalk.green('Import completed!'));
+    console.info(chalk.green(`Total objects processed: ${this.processedCount}`));
+
+    this.processedCount = 0;
+  };
+
   public getName(): string {
     return '--import';
   }
 
-  private readFile(filename: string): string {
-    try {
-      const filePath = resolve(filename);
-      return readFileSync(filePath, 'utf-8');
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        throw new Error(`Cannot read file: ${filename}. Error: ${error.message}`);
-      }
-      throw new Error(`Cannot read file: ${filename}`);
-    }
-  }
-
-  public execute(filename: string): void {
+  public async execute(filename: string): Promise<void> {
     if (!filename) {
       console.error(chalk.red('Please provide filename for import'));
       return;
     }
 
-    try {
-      const fileContent = this.readFile(filename);
-      console.info(chalk.green('File content:'));
-      console.info(chalk.blue(fileContent));
-    } catch (error: unknown) {
-      console.error(chalk.red('Failed to import data from file:'));
+    this.fileReader.on('line', this.onImportedLine);
+    this.fileReader.on('end', this.onCompleteImport);
 
-      if (error instanceof Error) {
-        console.error(chalk.red(error.message));
-      }
+    try {
+      console.info(chalk.blue(`Starting import from ${filename}...`));
+      await this.fileReader.read(filename);
+    } catch (error: unknown) {
+      console.error(chalk.red(`Failed to import data from file: ${filename}`));
+      console.error(chalk.red(this.getErrorMessage(error)));
     }
   }
 }

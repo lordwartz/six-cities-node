@@ -1,0 +1,28 @@
+{
+  "templates": [
+    {
+      "id": 1,
+      "names": ["Beautiful & luxurious apartment", "Cozy studio", "Modern loft", "Spacious family home", "Charming city flat"],
+      "descriptions": [
+        "A quiet cozy and picturesque that hides behind a river by the unique lightness of Amsterdam.",
+        "Discover daily life in the heart of the city in this stylish apartment.",
+        "Modern living in a historic building with all contemporary comforts.",
+        "Perfect for families looking to explore the city while enjoying home comforts.",
+        "Bright and airy apartment with stunning city views and modern amenities."
+      ],
+      "cities": ["Paris", "Cologne", "Brussels", "Amsterdam", "Hamburg", "Dusseldorf"],
+      "previewImages": ["img/apartment-01.jpg", "img/apartment-02.jpg", "img/apartment-03.jpg", "img/room.jpg", "img/studio-01.jpg"],
+      "images": [
+        ["img/apartment-01.jpg", "img/apartment-02.jpg", "img/apartment-03.jpg", "img/room.jpg", "img/studio-01.jpg", "img/apartment-01.jpg"],
+        ["img/room.jpg", "img/apartment-01.jpg", "img/apartment-02.jpg", "img/apartment-03.jpg", "img/studio-01.jpg", "img/apartment-01.jpg"]
+      ],
+      "types": ["apartment", "house", "room", "hotel"],
+      "goods": ["Breakfast", "Air conditioning", "Laptop friendly workspace", "Baby seat", "Washer", "Towels", "Fridge"],
+      "users": [
+        {"name": "Oliver Conner", "email": "oliver.conner@gmail.com", "type": "pro"},
+        {"name": "Angelina", "email": "angelina@gmail.com", "type": "pro"},
+        {"name": "Max", "email": "max@gmail.com", "type": "ordinary"}
+      ]
+    }
+  ]
+}
